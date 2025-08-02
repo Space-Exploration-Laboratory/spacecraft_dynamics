@@ -17,10 +17,23 @@ def func_satellite(x, t, J1, J2, J3):
     domega1 = (J2-J3) * omega2 * omega3/J1
     domega2 = (J3-J1) * omega3 * omega1/J2
     domega3 = (J1-J2) * omega1 * omega2/J3
+
+    s1 = np.sin(phi1)
+    s2 = np.sin(phi2)
+    s3 = np.sin(phi3)
+    c1 = np.cos(phi1)
+    c2 = np.cos(phi2)
+    c3 = np.cos(phi3)
+
+    # 3-2-1 オイラー角
+    # dphi1 = omega2 * s3/c2 + omega3 * c3/c2
+    # dphi2 = omega2 * c3 - omega3 * s3
+    # dphi3 = omega1 + omega2 * s2 * s3/c2 + omega3 * s2*c3/c2
     
-    dphi1 = omega2 * np.sin(phi3)/np.cos(phi2) + omega3 * np.cos(phi3)/np.cos(phi2)
-    dphi2 = omega2 * np.cos(phi3) - omega3 * np.sin(phi3)
-    dphi3 = omega1 + omega2 * np.sin(phi2) * np.sin(phi3)/np.cos(phi2) + omega3 * np.sin(phi2)*np.cos(phi3)/np.cos(phi2)
+    # 3-1-3 オイラー角
+    dphi1 = omega1 * s3/s2 + omega2 * c3/s2
+    dphi2 = omega1 * c3 - omega2 * s3
+    dphi3 = -omega1 * s3*c2/s2 - omega2 * c3*c2/s2 + omega3
 
 
     return [domega1, domega2, domega3,   dphi1, dphi2, dphi3]
@@ -38,7 +51,7 @@ if (__name__ == '__main__'):
     # J2 = 50.0
     # J3 = 40.0 
     
-    # 状態変数 x の初期値 [ω1, ω2, ω3, φ1, φ2, φ3] 
+    # 状態変数 x の初期値 [ω1, ω2, ω3, φ1, φ2, φ3] の順で格納している
     # ω1 には微小擾乱を与えている
     # ω3 に最大の初期角速度を与えることで、Z軸(第3軸)をスピン軸にしている
     x_0 = [0.1, 0.0, 1,      0.0, 0.01, 0.0]  
